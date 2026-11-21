@@ -2,12 +2,42 @@ name: Deploy to GCP
 on:
   push:
     branches: [main]
+
+env:
+  IMAGE_NAME: radish-llc
+  TAG: ${{ github.sha }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Build and Push Docker Image
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up GCP authentication
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Configure Docker for GCP
+        run: gcloud auth configure-docker
+
+      - name: Build Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/radish-llc:${{ github.sha }} .
-          docker push gcr.io/${{ secrets.GCP_PROJECT }}/radish-llc:${{ github.sha }}
+          if [ -z "${{ secrets.GCP_PROJECT }}" ]; then
+            echo "ERROR: GCP_PROJECT secret is not set. Please configure GCP_PROJECT in GitHub secrets."
+            exit 1
+          fi
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} .
+
+      - name: Push Docker image
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+
+      - name: Deploy to GKE (if available)
+        if: ${{ secrets.GCP_CLUSTER_NAME != '' && secrets.GCP_CLUSTER_ZONE != '' }}
+        run: |
+          gcloud container clusters get-credentials ${GCP_CLUSTER_NAME} --zone=${GCP_CLUSTER_ZONE} --project=${GCP_PROJECT}
+          kubectl create secret docker-registry gcr-secret --docker-server=gcr.io --docker-username=_ --docker-password=$(gcloud auth print-access-token) --namespace=default
+          kubectl apply -f k8s-deployment.yaml

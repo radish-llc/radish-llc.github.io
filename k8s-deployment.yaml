@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radish-llc
+  labels:
+    app: radish-llc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: radish-llc
+  template:
+    metadata:
+      labels:
+        app: radish-llc
+    spec:
+      containers:
+      - name: radish-llc
+        image: gcr.io/${{ secrets.GCP_PROJECT }}/radish-llc:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: radish-llc-service
+spec:
+  selector:
+    app: radish-llc
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
