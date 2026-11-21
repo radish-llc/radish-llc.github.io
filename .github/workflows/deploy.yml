@@ -1,0 +1,13 @@
+name: Deploy to GCP
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/radish-llc:${{ github.sha }} .
+          docker push gcr.io/${{ secrets.GCP_PROJECT }}/radish-llc:${{ github.sha }}
