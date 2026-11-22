@@ -22,7 +22,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           project_id: ${{ env.GCP_PROJECT }}
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+          workload_identity_provider: github.com/${{ github.repository }}:sub=refs/heads/main
 
       - name: Set up GCP CLI
         uses: google-github-actions/setup-gcloud@v2
