@@ -23,6 +23,7 @@ jobs:
         with:
           project_id: ${{ env.GCP_PROJECT }}
           workload_identity_provider: //iam.googleapis.com/projects/${{ env.GCP_PROJECT }}/locations/global/workloadIdentityPools/github/providers/github-actions
+          service_account: 668282322569-compute@developer.gserviceaccount.com
 
       - name: Set up GCP CLI
         uses: google-github-actions/setup-gcloud@v2.2.0
@@ -39,7 +40,7 @@ jobs:
           docker push ${GCP_PROJECT}-docker.pkg.dev/${GCP_PROJECT}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
       - name: Deploy to Cloud Run
-        if: ${{ vars.CLOUD_RUN_NAME && vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+        if: ${{ vars.CLOUD_RUN_NAME }}
         env:
           CLOUD_RUN_NAME: ${{ vars.CLOUD_RUN_NAME }}
           CLOUD_RUN_ZONE: ${{ vars.CLOUD_RUN_ZONE }}
@@ -47,6 +48,6 @@ jobs:
           gcloud config set-default compute zone ${CLOUD_RUN_ZONE}
           gcloud container-orchestration deployments create ${CLOUD_RUN_NAME} \
             --image=${GCP_PROJECT}-docker.pkg.dev/${GCP_PROJECT}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
-            --service-account=${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }} \
+            --service-account=668282322569-compute@developer.gserviceaccount.com \
             --port=80 \
             --restart-policy=Always
