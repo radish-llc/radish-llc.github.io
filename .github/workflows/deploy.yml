@@ -22,7 +22,7 @@ jobs:
         uses: google-github-actions/auth@v3
         with:
           project_id: ${{ env.GCP_PROJECT }}
-          workload_identity_provider: //iam.googleapis.com/projects/${{ env.GCP_PROJECT }}/locations/global/workloadIdentityPools/github/providers/github-actions
+          workload_identity_provider: projects/${{ env.GCP_PROJECT }}/locations/global/workloadIdentityPools/github/providers/github-actions
           service_account: 668282322569-compute@developer.gserviceaccount.com
 
       - name: Set up GCP CLI
