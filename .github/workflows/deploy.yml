@@ -23,7 +23,7 @@ jobs:
         with:
           project_id: ${{ env.GCP_PROJECT }}
           service_account: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
-          workload_identity_federation: true
+          workload_identity_provider: github.com/${{ github.repository }}:ref=${{ github.ref }}
 
       - name: Set up GCP CLI
         uses: google-github-actions/setup-gcloud@v2
