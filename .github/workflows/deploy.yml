@@ -10,15 +10,18 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up GCP authentication
-        uses: google-github-actions/setup-gcloud@v2
+      - name: Configure GCP workload federation
+        uses: google-github-actions/auth@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
 
       - name: Configure Docker for GCP
         run: gcloud auth configure-docker
@@ -26,7 +29,7 @@ jobs:
       - name: Build Docker image
         run: |
           if [ -z "${{ secrets.GCP_PROJECT }}" ]; then
-            echo "ERROR: GCP_PROJECT secret is not set. Please configure GCP_PROJECT in GitHub secrets."
+            echo "ERROR: GCP_PROJECT secret is not set."
             exit 1
           fi
           docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} .
