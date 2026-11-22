@@ -23,6 +23,7 @@ jobs:
         with:
           project_id: ${{ env.GCP_PROJECT }}
           workload_identity_provider: github.com/${{ github.repository }}:sub=refs/heads/main
+          audience: https://iam.googleapis.com
 
       - name: Set up GCP CLI
         uses: google-github-actions/setup-gcloud@v2.2.0
