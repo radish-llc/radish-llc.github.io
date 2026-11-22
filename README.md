@@ -112,7 +112,11 @@ Before the deployment workflow can run, the following must be configured in GCP:
    - Subject: `repo:radish-llc/radish-llc.github.io:ref:refs/heads/main`
    - Token path: `assertion.sub` (text format)
 
-5. **Grant the service account** the `roles/iam.workloadIdentityTokenGenerator` role.
+5. **Grant the service account** the `roles/iam.workloadIdentityUser` role, binding the principal:
+   ```
+   principal://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/subject/repo:radish-llc/radish-llc.github.io:ref:refs/heads/main
+   ```
+   Note: Use the **project number** (`668282322569`), not the project ID, in the principal path.
 
 ### GitHub Secrets
 
