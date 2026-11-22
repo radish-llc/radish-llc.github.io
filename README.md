@@ -75,3 +75,66 @@ For support, email radish@example.com or open an issue.
 ## License
 
 This project is licensed under the MIT License.
+
+
+
+
+## Deployment
+
+This project uses GitHub Actions to deploy to GCP Cloud Run via OIDC (Workload Identity Federation).
+
+### GCP IAM Requirements
+
+Before the deployment workflow can run, the following must be configured in GCP:
+
+1. **Enable required APIs**:
+
+   ```bash
+   gcloud services enable \
+     iam.googleapis.com \
+     iamcredentials.googleapis.com \
+     cloudresourcemanager.googleapis.com \
+     sts.googleapis.com \
+     run.googleapis.com \
+     artifactregistry.googleapis.com \
+     cloudbuild.googleapis.com \
+     --project="${PROJECT_ID}"
+   ```
+
+2. **Create a Workload Identity Pool** named `github` in GCP Console → IAM → Workload Identity Pools.
+
+3. **Create a Provider** named `github-actions` in the `github` pool, configured with:
+   - Issuer: `https://token.actions.githubusercontent.com`
+   - Audience: `//iam.googleapis.com/projects/{PROJECT_ID}/locations/global/workloadIdentityPools/github/providers/github-actions`
+
+4. **Add a Service Account Mapping** with:
+   - Service account: `668282322569-compute@developer.gserviceaccount.com`
+   - Subject: `repo:radish-llc/radish-llc.github.io:ref:refs/heads/main`
+   - Token path: `assertion.sub` (text format)
+
+5. **Grant the service account** the `roles/iam.workloadIdentityTokenGenerator` role.
+
+### GitHub Secrets
+
+| Secret | Description |
+|---|---|
+| `GCP_PROJECT` | The GCP project ID |
+
+### GitHub Variables
+
+| Variable | Description |
+|---|---|
+| `CLOUD_RUN_NAME` | Name of the Cloud Run service |
+| `CLOUD_RUN_ZONE` | GCP zone for deployment (e.g., `us-south1`) |
+
+export PROJECT_ID="project-d5697105-f339-4128-822"
+
+gcloud services enable \
+  iam.googleapis.com \
+  iamcredentials.googleapis.com \
+  cloudresourcemanager.googleapis.com \
+  sts.googleapis.com \
+  run.googleapis.com \
+  artifactregistry.googleapis.com \
+  cloudbuild.googleapis.com \
+  --project="${PROJECT_ID}"
