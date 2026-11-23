@@ -98,7 +98,7 @@ Before the deployment workflow can run, the following must be configured in GCP:
      run.googleapis.com \
      artifactregistry.googleapis.com \
      cloudbuild.googleapis.com \
-     --project="${PROJECT_ID}"
+     --project='${PROJECT_ID}'
    ```
 
 2. **Create a Workload Identity Pool** named `github` in GCP Console → IAM → Workload Identity Pools.
@@ -131,7 +131,7 @@ Before the deployment workflow can run, the following must be configured in GCP:
 | `CLOUD_RUN_NAME` | Name of the Cloud Run service |
 | `CLOUD_RUN_ZONE` | GCP zone for deployment (e.g., `us-south1`) |
 
-export PROJECT_ID="project-d5697105-f339-4128-822"
+export PROJECT_ID='project-d5697105-f339-4128-822'
 
 gcloud services enable \
   iam.googleapis.com \
@@ -141,4 +141,14 @@ gcloud services enable \
   run.googleapis.com \
   artifactregistry.googleapis.com \
   cloudbuild.googleapis.com \
-  --project="${PROJECT_ID}"
+  --project='${PROJECT_ID}'
+
+
+
+gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@developer.gserviceaccount.com' --project='project-d5697105-f339-4128-822' --role='roles/iam.workloadIdentityUser' --member='principalSet://://googleapis.com'
+
+
+gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@developer.gserviceaccount.com' --project='project-d5697105-f339-4128-822' --role='roles/iam.workloadIdentityUser' --member='principal://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/subject/repo:radish-llc/radish-llc.github.io:ref:refs/heads/main'
+
+gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@developer.gserviceaccount.com' --project='project-d5697105-f339-4128-822' --role='roles/iam.workloadIdentityUser' --member='principalSet://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/attribute.repository/radish-llc/radish-llc'
+
