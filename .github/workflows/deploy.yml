@@ -45,7 +45,7 @@ jobs:
           CLOUD_RUN_NAME: ${{ vars.CLOUD_RUN_NAME }}
           CLOUD_RUN_ZONE: ${{ vars.CLOUD_RUN_ZONE }}
         run: |
-          gcloud config set-default compute zone ${CLOUD_RUN_ZONE}
+          gcloud config set compute zone ${CLOUD_RUN_ZONE}
           gcloud container-orchestration deployments create ${CLOUD_RUN_NAME} \
             --image=${GCP_PROJECT}-docker.pkg.dev/${GCP_PROJECT}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
             --service-account=668282322569-compute@developer.gserviceaccount.com \
