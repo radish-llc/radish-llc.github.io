@@ -19,6 +19,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4.2.0
 
+      - name: Debug OIDC token claims
+        env:
+          OIDC_TOKEN: ${{ github.token }}
+        run: |
+          python3 -c '
+          import base64, json, os
+          token = os.environ["OIDC_TOKEN"]
+          payload = token.split(".")[1]
+          payload += "=" * (-len(payload) % 4)
+          print(json.dumps(json.loads(base64.urlsafe_b64decode(payload)), indent=2))
+          '
+
       - name: Set up GCP authentication
         uses: google-github-actions/auth@v3
         with:
