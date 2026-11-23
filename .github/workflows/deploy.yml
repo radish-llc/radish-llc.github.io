@@ -8,6 +8,7 @@ env:
   TAG: ${{ github.sha }}
   GCP_PROJECT: ${{ vars.GCP_PROJECT_NUMBER }}
   GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  CLOUD_RUN_ZONE: ${{ vars.CLOUD_RUN_ZONE }}
 
 jobs:
   deploy:
