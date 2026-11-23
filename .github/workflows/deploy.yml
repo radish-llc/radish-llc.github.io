@@ -7,6 +7,7 @@ env:
   IMAGE_NAME: radish-llc
   TAG: ${{ github.sha }}
   GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
 
 jobs:
   deploy:
@@ -46,7 +47,7 @@ jobs:
           CLOUD_RUN_ZONE: ${{ vars.CLOUD_RUN_ZONE }}
         run: |
           gcloud run deploy ${CLOUD_RUN_NAME} \
-            --project=${GCP_PROJECT} \
+            --project=${GCP_PROJECT_ID} \
             --image=${GCP_PROJECT}-docker.pkg.dev/${GCP_PROJECT}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
             --platform=managed \
             --region=${CLOUD_RUN_ZONE} \
