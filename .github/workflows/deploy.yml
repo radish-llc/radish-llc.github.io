@@ -60,7 +60,7 @@ jobs:
         run: |
           gcloud run deploy ${CLOUD_RUN_NAME} \
             --project=${GCP_PROJECT_ID} \
-            --image=${GCP_PROJECT}-docker.pkg.dev/${GCP_PROJECT}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
+            --image=${GCP_PROJECT_ID}-docker.pkg.dev/${GCP_PROJECT_ID}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
             --platform=managed \
             --region=${CLOUD_RUN_ZONE} \
             --service-account=668282322569-compute@developer.gserviceaccount.com \
