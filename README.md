@@ -152,3 +152,12 @@ gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@develop
 
 gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@developer.gserviceaccount.com' --project='project-d5697105-f339-4128-822' --role='roles/iam.workloadIdentityUser' --member='principalSet://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/attribute.repository/radish-llc/radish-llc'
 
+
+
+  gcloud run deploy radish-media \
+    --project=project-d5697105-f339-4128-822 \
+    --image=project-d5697105-f339-4128-822-docker.pkg.dev/project-d5697105-f339-4128-822/radish-llc/radish-llc:befbb7e4658d2b1d91ae5e9e5d998d66d3df6127 \
+    --platform=managed \
+    --region=us-south1 \
+    --service-account='668282322569-compute@developer.gserviceaccount.com' \
+    --allow-unauthenticated
