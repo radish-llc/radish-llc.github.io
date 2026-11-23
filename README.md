@@ -150,7 +150,7 @@ gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@develop
 
 gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@developer.gserviceaccount.com' --project='project-d5697105-f339-4128-822' --role='roles/iam.workloadIdentityUser' --member='principal://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/subject/repo:radish-llc/radish-llc.github.io:ref:refs/heads/main'
 
-gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@developer.gserviceaccount.com' --project='project-d5697105-f339-4128-822' --role='roles/iam.workloadIdentityUser' --member='principalSet://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/attribute.repository/radish-llc/radish-llc'
+gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@developer.gserviceaccount.com' --project='project-d5697105-f339-4128-822' --role='roles/iam.workloadIdentityUser' --member='principalSet://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/attribute.repository/radish-llc/radish-llc.github.io'
 
 
 
@@ -167,3 +167,12 @@ gcloud iam service-accounts add-iam-policy-binding '668282322569-compute@develop
 
 
     668282322569-compute@developer.gserviceaccount.com
+
+
+
+
+
+gcloud iam service-accounts add-iam-policy-binding 'github-deployer@://gserviceaccount.com' \
+  --project='project-d5697105-f339-4128-822' \
+  --role='roles/iam.workloadIdentityUser' \
+  --member='principalSet://iam.googleapis.com/projects/668282322569/locations/global/workloadIdentityPools/github/attribute.repository/radish-llc/radish-llc'
