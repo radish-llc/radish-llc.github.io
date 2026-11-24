@@ -48,7 +48,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ${CLOUD_RUN_ZONE}-docker.pkg.dev/${GCP_PROJECT_ID}/cloud-run-source-deploy/${{ env.IMAGE_NAME }}:${{ env.TAG }} .
-          
+
       - name: Push Docker image
         run: |
           docker push ${CLOUD_RUN_ZONE}-docker.pkg.dev/${GCP_PROJECT_ID}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
@@ -61,7 +61,7 @@ jobs:
         run: |
           gcloud run deploy ${CLOUD_RUN_NAME} \
             --project=${GCP_PROJECT_ID} \
-            --image=${CLOUD_RUN_ZONE}-docker.pkg.dev/${GCP_PROJECT_ID}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
+            --image=${CLOUD_RUN_ZONE}-docker.pkg.dev/${GCP_PROJECT_ID}/cloud-run-source-deploy/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
             --platform=managed \
             --region=${CLOUD_RUN_ZONE} \
             --service-account=668282322569-compute@developer.gserviceaccount.com \
