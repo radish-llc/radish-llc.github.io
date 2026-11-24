@@ -51,7 +51,7 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push ${CLOUD_RUN_ZONE}-docker.pkg.dev/${GCP_PROJECT_ID}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          docker push ${CLOUD_RUN_ZONE}-docker.pkg.dev/${GCP_PROJECT_ID}/cloud-run-source-deploy/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
       - name: Deploy to Cloud Run
         if: ${{ vars.CLOUD_RUN_NAME }}
