@@ -86,4 +86,4 @@ radish-llc.github.io/
 ```
 
 ## Customization
-
+gcloud run services logs read radish-media --region=us-south1 --limit=30
