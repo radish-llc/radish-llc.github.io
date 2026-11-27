@@ -90,6 +90,10 @@ radish-llc.github.io/
 gcloud compute ssl-certificates describe radish-media-cert \
    --global --format="get(name,managed.status,maanged.domainStatus)"
 
+## Email
+
+- **Contact Email**: [david@radish-media.com](mailto:david@radish-media.com)
+
 ## Customization
 
 gcloud run services logs read radish-media --region=us-south1 --limit=30
