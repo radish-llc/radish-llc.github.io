@@ -85,5 +85,61 @@ radish-llc.github.io/
 └── README.md         # Project documentation
 ```
 
+## Troubleshooting
+
+gcloud compute ssl-certificates describe radish-media-cert \
+   --global --format="get(name,managed.status,maanged.domainStatus)"
+
 ## Customization
+
 gcloud run services logs read radish-media --region=us-south1 --limit=30
+
+### Reserving Static IP
+
+gcloud compute addresses describe radish-media-ip --format="get(address)" --global
+
+gcloud compute network-endpoint-groups create radish-media-lb-neg \
+    --region=us-south1 \
+    --network-endpoint-type=serverless \
+    --cloud-run-service=radish-media
+
+#### Create Serverless Network Group and Backend Service
+
+gcloud compute network-endpoint-groups create radish-media-lb-neg \
+    --region=us-south1 \
+    --network-endpoint-type=serverless \
+    --cloud-run-service=radish-media
+
+gcloud compute backend-services create radish-media-lb-backend \
+    --load-balancing-scheme=EXTERNAL_MANAGED \
+    --protocol=HTTP \
+    --global
+
+gcloud compute backend-services add-backend radish-media-lb-backend \
+    --global \
+    --network-endpoint-group=radish-media-lb-neg \
+    --network-endpoint-group-region=us-south1
+
+gcloud compute url-maps create radish-media-url-map \
+    --default-service=radish-media-lb-backend
+
+gcloud compute ssl-certificates create radish-media-cert \
+    --domains=radish-media.com \
+    --global
+
+gcloud compute target-https-proxies create radish-media-https-proxy \
+    --url-map=radish-media-url-map \
+    --ssl-certificates=radish-media-cert
+
+gcloud compute forwarding-rules create radish-media-fwd-rules \
+    --load-balancing-scheme=EXTERNAL_MANAGED \
+    --network-tier=PREMIUM \
+    --address=radish-media-ip \
+    --global \
+    --target-https-proxy=radish-media-https-proxy \
+    --ports=443
+
+
+gcloud run services update radish-media \
+    --ingress=internal-and-cloud-load-balancing \
+    --region=us-south1
